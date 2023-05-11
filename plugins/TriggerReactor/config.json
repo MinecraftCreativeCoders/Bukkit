@@ -1,0 +1,12 @@
+{
+  "PermissionManager": {
+    "Intercept": true
+  },
+  "Mysql": {
+    "UserName": "root",
+    "Address": "127.0.0.1:3306",
+    "Enable": false,
+    "DbName": "TriggerReactor",
+    "Password": "1234"
+  }
+}
