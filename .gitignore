@@ -1,5 +1,8 @@
 bundler/
 logs/
+world/
+world_nether/
+world_the_end/
 banned-ips.json
 banned-players.json
 bukkit.yml
