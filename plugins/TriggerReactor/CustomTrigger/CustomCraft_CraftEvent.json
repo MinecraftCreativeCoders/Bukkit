@@ -1,0 +1,4 @@
+{
+  "event": "org.bukkit.event.inventory.CraftItemEvent",
+  "sync": true
+}
