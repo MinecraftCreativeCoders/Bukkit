@@ -16,16 +16,27 @@
  *******************************************************************************/
 function GIVE(args){
 	if(args.length == 1){
-		if(player.getInventory().firstEmpty() == -1){
-			throw new Error("Player has no empty slot.");
-		}
-		
+
 		if (!(args[0] instanceof Java.type("org.bukkit.inventory.ItemStack")))
 		{
 			throw new Error("Invalid ItemStack: " + args[0])
 		}
-		
-		player.getInventory().addItem(args[0]);
+
+		var inven = player.getInventory();
+		var size = 0;
+		for(var i = 0; i < 36; i++){
+			if (inven.getItem(i) == null) {
+				size += args[0].getMaxStackSize();
+			}else if (inven.getItem(i).isSimilar(args[0])){
+				size += inven.getItem(i).getMaxStackSize() - inven.getItem(i).getAmount();
+			}
+
+			if (size >= args[0].getAmount()) {
+				inven.addItem(args[0]);
+				return;
+			}
+		}
+		throw new Error("Player has no empty slot.");
 	}else{
 		throw new Error("Invalid parameters. Need [ItemStack]")
 	}
