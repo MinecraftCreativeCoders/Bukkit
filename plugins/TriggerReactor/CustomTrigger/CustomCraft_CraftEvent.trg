@@ -31,34 +31,22 @@ IF event.getInventory().getResult() != null
         inven = event.getWhoClicked().getInventory()
 
         WHILE event.getInventory().getResult() != null
-            IF inven.firstEmpty() == -1
-                pass = false
-                FOR i = 0:36
-                    IF inven.getItem(i).isSimilar(result) && inven.getItem(i).getAmount() + result.getAmount() <= result.getMaxStackSize()
-                        pass = true
-                        #BREAK
-                    ENDIF
-                ENDFOR
-            ELSE
-                pass = true
-            ENDIF
-
-            IF pass
+            TRY
+                #GIVE event.getRecipe().getResult()
                 shape = ArrayList(event.getRecipe().getChoiceMap().values())
                 matrix = event.getInventory().getMatrix()
                 FOR i = 0:matrix.length
                     item = matrix[i]
                     IF item != null && shape.get(i) IS ExactChoice
                         item.setAmount(item.getAmount() - shape.get(i).getItemStack().getAmount())
-                        inven.addItem(event.getRecipe().getResult())
                         IF item.getAmount() < shape.get(i).getItemStack().getAmount()
                             event.getInventory().setResult(null)
                         ENDIF
                     ENDIF
                 ENDFOR
-            ELSE
+            CATCH e
                 #BREAK
-            ENDIF
+            ENDTRY
         ENDWHILE
     ENDIF
 ENDIF
