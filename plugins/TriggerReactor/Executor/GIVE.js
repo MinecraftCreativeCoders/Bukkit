@@ -14,30 +14,48 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
+
+var Player = Java.type('org.bukkit.entity.Player');
+var ItemStack = Java.type('org.bukkit.inventory.ItemStack');
+
+var validation = {
+	overloads: [
+		[
+			{ type: ItemStack.class, name: 'itemStack' }
+		],
+		[
+			{ type: Player.class, name: 'player' },
+			{ type: ItemStack.class, name: 'itemStack' }
+		]
+	]
+};
+
 function GIVE(args){
-	if(args.length == 1){
+    var target, itemStack;
 
-		if (!(args[0] instanceof Java.type("org.bukkit.inventory.ItemStack")))
-		{
-			throw new Error("Invalid ItemStack: " + args[0])
-		}
+    if (overload === 0) {
+        target = player;
+        itemStack = args[0];
+    } else if (overload === 1) {
+        target = args[0];
+        itemStack = args[1];
+    }
 
-		var inven = player.getInventory();
-		var size = 0;
-		for(var i = 0; i < 36; i++){
-			if (inven.getItem(i) == null) {
-				size += args[0].getMaxStackSize();
-			}else if (inven.getItem(i).isSimilar(args[0])){
-				size += inven.getItem(i).getMaxStackSize() - inven.getItem(i).getAmount();
-			}
+    if (!target) throw new Error('Player is null.');
 
-			if (size >= args[0].getAmount()) {
-				inven.addItem(args[0]);
-				return;
-			}
-		}
-		throw new Error("Player has no empty slot.");
-	}else{
-		throw new Error("Invalid parameters. Need [ItemStack]")
-	}
+    var inv = player.getInventory();
+    var size = 0;
+    for(var i = 0; i < 36; i++){
+        if (inv.getItem(i) === null) {
+            size += itemStack.getMaxStackSize();
+        }else if (inv.getItem(i).isSimilar(itemStack)){
+            size += inv.getItem(i).getMaxStackSize() - inv.getItem(i).getAmount();
+        }
+
+        if (size >= itemStack.getAmount()) {
+            inv.addItem(itemStack);
+            return;
+        }
+    }
+    throw new Error("Player has no empty slot.");
 }
